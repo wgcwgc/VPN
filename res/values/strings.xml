@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- app setting -->
+    <string name="app_name">wgcwgc</string>
+    <string name="app_name01">wgcwgc</string>
+    <string name="app_name02">Android_Wgcwgc_Login</string>
+
+    <!-- menu setting -->
+    <string name="menu_hello">Hello world!</string>
+    <string name="menu_action_settings">设置</string>
+    <string name="menu_about">关于</string>
+    
+    <!-- business_menu setting -->
+    <string name="business_menu_personInfromation">个人信息</string>
+    <string name="business_menu_bind">绑定账号</string>
+    <string name="business_menu_opinion">意见反馈</string>
+    <string name="business_menu_cheakNewVersion">检查新版本</string>
+    <string name="business_menu_about">关于我们</string>
+    <string name="business_menu_settings">设置</string>
+    <string name="business_menu_exit">退出</string>
+
+    <!-- main setting -->
+    <string name="main_Button01">账号</string>
+    <string name="main_account">账号</string>
+    <string name="main_account_hint">手机号/用户名/邮箱</string>
+    <string name="main_password">密码</string>
+    <string name="main_password_hint">密码</string>
+    <string name="main_login">登录</string>
+    <string name="main_register">注册</string>
+    <string name="main_forget_password">忘记密码？</string>
+    <string name="main_Retrieve_account">找回账号！</string>
+
+    <!-- login setting -->
+    <string name="login_TextView01_text">昵称：</string>
+    <string name="login_editText01_hint">用户名</string>
+    <string name="login_Button01">博客</string>
+    <string name="login_Button02">拨号</string>
+    <string name="login_Button03">短信</string>
+    <string name="login_Button04">音乐</string>
+    <string name="login_Button05">卸载</string>
+
+    <!-- register setting -->
+    <string name="register_login_hint">请输入用户名</string>
+    <string name="register_login_hint_hint">仅限英文字母和数字</string>
+    <string name="register_hint_hint">|</string>
+    <string name="register_pass_hint">请输入密码</string>
+    <string name="register_password_hint_hint">4到10位之间</string>
+    <string name="register_pass_resure_hint">请确认输入的密码</string>
+    <string name="register_chkcode">请输入验证码</string>
+    <string name="register_email">请输入邮箱</string>
+    <string name="register_phone">请输入电话号码</string>
+    <string name="register_emailaddress_hint">email地址</string>
+    <string name="register_number_hint">手机号码</string>
+    <string name="register_notes_hint">备注</string>
+    <string name="register_chkcode_hint">验证码</string>
+    <string name="register_okButton">注册</string>
+    <string name="register_cancelButton">获取验证码</string>
+
+    <!-- register_01 setting -->
+    <string name="register_01_login_hint">请输入用户名</string>
+    <string name="register_01_pass_hint">请确认输入的密码</string>
+    <string name="register_01_pass_resure_hint">请输入4到10位之间的密码</string>
+    <string name="register_01_chkcode">请输入验证码</string>
+    <string name="register_01_email">请输入邮箱</string>
+    <string name="register_01_phone">请输入电话号码</string>
+    <string name="register_01_emailaddress_hint">email地址</string>
+    <string name="register_01_email_hint">邮箱号码</string>
+    <string name="register_01_notes_hint">备注</string>
+    <string name="register_01_chkcode_hint">验证码</string>
+    <string name="register_01_submitButton">下一步</string>
+    <string name="register_01_getChkcodeButton">获取验证码</string>
+    <string name="register_01_hint_hint">i am hint</string>
+
+    <!-- register_02 setting -->
+    <string name="register_02_login_hint">请输入用户名 , 仅限英文和数字</string>
+    <string name="register_02_pass_hint">请输入密码 ， 4到10位之间</string>
+    <string name="register_02_pass_resure_hint">请确认密码</string>
+    <string name="register_02_chkcode">请输入验证码</string>
+    <string name="register_02_email">请输入邮箱</string>
+    <string name="register_02_phone">请输入电话号码</string>
+    <string name="register_02_emailaddress_hint">email地址</string>
+    <string name="register_02_number_hint">手机号码</string>
+    <string name="register_02_notes_hint">备注</string>
+    <string name="register_02_chkcode_hint">验证码</string>
+    <string name="register_02_okButton">注册</string>
+    <string name="register_02_hint">i am hint</string>
+    <string name="register_02_cancelButton">获取验证码</string>
+    
+    
+    <!-- bind setting -->
+    <string name="bind_login_hint">请输入您的用户名</string>
+    <string name="bind_password_hint">请输入您的密码</string>
+    <string name="bind_modify_hint">下面两项修改已有帐号的密码或邮箱 ，为空表示不修改</string>
+    <string name="bind_email_hint">请输入您的邮箱账号</string>
+    <string name="bind_oldPassword_hint">请输入您原来的密码</string>
+	<string name="bind_submitBotton">修改</string>
+    
+</resources>

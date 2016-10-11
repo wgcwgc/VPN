@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.runcom.wgcwgc"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="24" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher002"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.runcom.wgcwgc.main.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.runcom.wgcwgc.business.Business" >
+        </activity>
+        <activity
+            android:name="com.runcom.wgcwgc.register.Register"
+            android:icon="@drawable/ic_launcher001"
+            android:parentActivityName="com.runcom.wgcwgc.main.MainActivity" >
+        </activity>
+        <activity android:name="com.runcom.wgcwgc.register.Register_01" >
+        </activity>
+        <activity android:name="com.runcom.wgcwgc.register.Register_02" >
+        </activity>
+        <activity
+            android:name="com.runcom.wgcwgc.business.Bind"
+            android:icon="@drawable/ic_launcher001"
+            android:parentActivityName="com.runcom.wgcwgc.business.Business" >
+        </activity>
+        <activity
+            android:name="com.runcom.wgcwgc.business.PersonInformation"
+            android:icon="@drawable/ic_launcher001"
+            android:parentActivityName="com.runcom.wgcwgc.business.Business" >
+        </activity>
+        <activity android:name="com.runcom.wgcwgc.position.Coordinate" >
+        </activity>
+        <activity android:name="com.runcom.wgcwgc.position.Coordinate_1" >
+        </activity>
+    </application>
+
+</manifest>
