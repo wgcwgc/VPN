@@ -199,6 +199,10 @@ public class MainActivity extends Activity
 			// os = Build.VERSION.RELEASE;
 			dev = android.provider.Settings.Secure.getString(MainActivity.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
 
+			if(lang.contains("zh"))
+            {
+	            lang = "zh-Hans";
+            }
 			String signValu = "tuoyouvpn" + app + build + dev + lang + login + market + os + pass + term + ver;
 			signValu = new MD5().md5(signValu).toUpperCase();
 			// Log.d("LOG" ,signValu);

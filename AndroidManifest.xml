@@ -53,6 +53,8 @@
         </activity>
         <activity android:name="com.runcom.wgcwgc.position.Coordinate_1" >
         </activity>
+        <activity android:name="com.runcom.wgcwgc.business.Getsvrlist" >
+        </activity>
     </application>
 
 </manifest>

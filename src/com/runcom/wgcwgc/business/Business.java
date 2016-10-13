@@ -35,8 +35,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.runcom.wgcwgc.R;
@@ -49,14 +49,17 @@ import com.runcom.wgcwgc.web.SSLSocketFactoryEx;
 public class Business extends Activity
 {
 
+	public Svrlist svrlist;
 	private Intent intent;
-	private String contents;
-	private TextView textView;
+	// private String contents;
+	// private TextView textView;
 	String app;
 
 	private String login , mesg , uid , expire , freetime , flow , score ,
 	        coupon , type , email , session;
 	private Long result;
+
+	// private Button button_getsvrlist , button_getproducts;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -95,7 +98,10 @@ public class Business extends Activity
 		email = intent.getStringExtra("email");
 		session = intent.getStringExtra("session");
 
-		contents = "uid:\t" + uid + "\nexpire:\t" + expire + "\nfreetime:\t" + freetime + "\nflow:\t" + flow + "\nscore:\t" + score + "\ncoupon:\t" + coupon + "\ntype:\t" + type + "\nemaile:\t" + email + "\nsession:\t" + session + "\n";
+		// contents = "uid:\t" + uid + "\nexpire:\t" + expire + "\nfreetime:\t"
+		// + freetime + "\nflow:\t" + flow + "\nscore:\t" + score +
+		// "\ncoupon:\t" + coupon + "\ntype:\t" + type + "\nemaile:\t" + email +
+		// "\nsession:\t" + session + "\n";
 
 		// contents = "login:\t" + intent.getStringExtra("login") + "\n";
 		// contents += "reslut:\t" + intent.getLongExtra("result" , -1) + "\n";
@@ -110,16 +116,31 @@ public class Business extends Activity
 		// contents += "email:\t" + intent.getStringExtra("email") + "\n";
 		// contents += "session:\t" + intent.getStringExtra("session") + "\n";
 
-		getsvrlist(uid ,type);
-		getproducts(uid ,type);
-		getconfig(uid);
-
-		textView = (TextView) findViewById(R.id.textView_business);
-
-		textView.setText(contents);
+		// getproducts(uid ,type);
+		// getconfig(uid);
+		// getsvrlist(uid , type);
+		// textView = (TextView) findViewById(R.id.textView_business);
+		// textView.setText(contents);
 
 	}
 
+	public void getsvrlist(View view )
+	{
+		Intent intent = new Intent();
+		intent.putExtra("uid" ,uid);
+		intent.putExtra("type" ,type);
+		intent.setClass(Business.this ,Getsvrlist.class);
+		startActivity(intent);
+		// getsvrlist(uid ,type);
+
+	}
+
+	public void getproducts(View view )
+	{
+
+	}
+
+	@SuppressWarnings("unused")
 	private void getconfig(String uid )
 	{
 		GetThread_getconfig getThread_getconfig = new GetThread_getconfig(uid);
@@ -162,6 +183,10 @@ public class Business extends Activity
 			String build = "57";
 			String dev = android.provider.Settings.Secure.getString(Business.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
 			String lang = Locale.getDefault().getLanguage();
+			if(lang.contains("zh"))
+			{
+				lang = "zh-Hans";
+			}
 			int market = 2;
 			String os = Build.VERSION.RELEASE;
 			int term = 0;
@@ -182,14 +207,14 @@ public class Business extends Activity
 			HttpGet httpGet = new HttpGet(url);
 			try
 			{
-//				Log.d("LOG" , "start1,,,");
+				// Log.d("LOG" , "start1,,,");
 				// 第三步：执行请求，获取服务器发还的相应对象
 				HttpResponse response = httpClient.execute(httpGet);
 				// System.out.println("test00");
 				// 第四步：检查相应的状态是否正常：检查状态码的值是200表示正常
 				if(response.getStatusLine().getStatusCode() == 200)
 				{
-//					Log.d("LOG" , "start2,,,");
+					// Log.d("LOG" , "start2,,,");
 					// 第五步：从相应对象当中取出数据，放到entity当中
 					// System.out.println("test01");
 					HttpEntity entity = response.getEntity();
@@ -201,40 +226,43 @@ public class Business extends Activity
 					String returnLine = "";
 					while((line = reader.readLine()) != null)
 					{
-//						Log.d("LOG" , "start3,,,");
+						// Log.d("LOG" , "start3,,,");
 						returnLine += line;
 						System.out.println("*" + line + "*\n");
 					}
-//					Log.d("LOG" , "start4,,,");
+					// Log.d("LOG" , "start4,,,");
 					JSONObject jsonObject = new JSONObject(returnLine);
 					// String result = jsonObject.getString("result");
 					Long result = jsonObject.getLong("result");
 					final String mesg = jsonObject.getString("mesg");
 					JSONObject jsonObject_config = jsonObject.getJSONObject("config");
-					
-					
-					
-//					JSONArray config_list_Array = jsonObject.getJSONArray("config");
-//					int leng = config_list_Array.length();
 
-					
-//					Log.d("LOG" , "result:" + result + "\nmesg:" + mesg + "\njsonObject_config:" + jsonObject_config);
+					// JSONArray config_list_Array =
+					// jsonObject.getJSONArray("config");
+					// int leng = config_list_Array.length();
+
+					// Log.d("LOG" , "result:" + result + "\nmesg:" + mesg +
+					// "\njsonObject_config:" + jsonObject_config);
 					if(result == 0)
 					{
-						Log.d("LOG" , "Business_getconfig_result:\n" + "result:" + result + "\nmesg:" + mesg + "\njsonObject_config:" + jsonObject_config);
-//						List < String > config_list = new ArrayList < String >();
-//						for(int i = 0 ; i < config_list_Array.length() ; i ++ )
-//						{
-//
-//							config_list.add(config_list_Array.getString(i));
-//							Log.d("LOG" ,config_list.get(i));
-//						}
+						Log.d("LOG" ,"Business_getconfig_result:\n" + "result:" + result + "\nmesg:" + mesg + "\njsonObject_config:" + jsonObject_config);
+						// List < String > config_list = new ArrayList < String
+						// >();
+						// for(int i = 0 ; i < config_list_Array.length() ; i ++
+						// )
+						// {
+						//
+						// config_list.add(config_list_Array.getString(i));
+						// Log.d("LOG" ,config_list.get(i));
+						// }
 
 						// JSONObject jsonObject2 = new
 						// JSONObject(products_list.get(0).toString());
 						// Log.d("LOG" , "id:" + jsonObject2.getString("id"));
 
-//						Log.d("LOG" ,"Business_getconfig_response:\n" + "result:" + result + "\nmesg:" + mesg + "\nconfig:" + config_list_Array + "\nleng:" + leng);
+						// Log.d("LOG" ,"Business_getconfig_response:\n" +
+						// "result:" + result + "\nmesg:" + mesg + "\nconfig:" +
+						// config_list_Array + "\nleng:" + leng);
 
 					}
 
@@ -242,7 +270,9 @@ public class Business extends Activity
 			}
 			catch(Exception e)
 			{
-//				Log.d("LOG" ,"Business_getconfig_GetThread_submit_http_bug:\n" + e.toString());
+				// Log.d("LOG"
+				// ,"Business_getconfig_GetThread_submit_http_bug:\n" +
+				// e.toString());
 				e.printStackTrace();
 			}
 
@@ -250,6 +280,7 @@ public class Business extends Activity
 
 	}
 
+	@SuppressWarnings("unused")
 	private void getproducts(String uid , String type )
 	{
 		GetThread_getproducts getThread_getproducts = new GetThread_getproducts(uid , type);
@@ -294,6 +325,10 @@ public class Business extends Activity
 			String build = "57";
 			String dev = android.provider.Settings.Secure.getString(Business.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
 			String lang = Locale.getDefault().getLanguage();
+			if(lang.contains("zh"))
+			{
+				lang = "zh-Hans";
+			}
 			int market = 2;
 			String os = Build.VERSION.RELEASE;
 			int term = 0;
@@ -305,10 +340,10 @@ public class Business extends Activity
 
 			dev = android.provider.Settings.Secure.getString(Business.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
 
-			String signValu = "tuoyouvpn" + app + build + dev + lang + market + os + term + type + uid + ver;
+			String signValu = "tuoyouvpn" + app + build + dev + lang + market + os + term + uid + ver;
 			signValu = new MD5().md5(signValu).toUpperCase();
 			// Log.d("LOG" ,signValu);
-			String url = "https://a.redvpn.cn:8443/interface/getproducts.php?app=" + app + "&build=" + build + "&uid=" + uid + "&type=" + type + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
+			String url = "https://a.redvpn.cn:8443/interface/getproducts.php?app=" + app + "&build=" + build + "&uid=" + uid + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
 			// 第二步：创建代表请求的对象,参数是访问的服务器地址
 			Log.d("LOG" ,"Business_getproducts_url:\n" + url);
 			HttpGet httpGet = new HttpGet(url);
@@ -371,6 +406,7 @@ public class Business extends Activity
 
 	}
 
+	@SuppressWarnings("unused")
 	private void getsvrlist(String uid , String type )
 	{
 		GetThread_getsvrlist getThread_getsvrlist = new GetThread_getsvrlist(uid , type);
@@ -416,6 +452,10 @@ public class Business extends Activity
 			String build = "57";
 			String dev = android.provider.Settings.Secure.getString(Business.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
 			String lang = Locale.getDefault().getLanguage();
+			if(lang.contains("zh"))
+			{
+				lang = "zh-Hans";
+			}
 			int market = 2;
 			String os = Build.VERSION.RELEASE;
 			int term = 0;
@@ -465,19 +505,30 @@ public class Business extends Activity
 
 					if(result == 0)
 					{
-						List < String > server_list = new ArrayList < String >();
-						for(int i = 0 ; i < svrlistArray.length() ; i ++ )
-						{
+						svrlist = new Svrlist();
 
+						List < String > server_list = new ArrayList < String >();
+						for(int i = 0 ; i < leng ; i ++ )
+						{
+							Log.d("LOG" ,"mesg:" + mesg + "\n");
 							server_list.add(svrlistArray.getString(i));
-							// Log.d("LOG" , server_list.get(i));
+							JSONObject jsonObject_content = new JSONObject(server_list.get(i).toString());
+							svrlist.setId(jsonObject_content.getString("id"));
+//							svrlist.setName(jsonObject_content.getString("name"));
+//							svrlist.setAddr(jsonObject_content.getString("addr"));
+//							svrlist.setType(jsonObject_content.getString("type"));
+//							svrlist.setProtocol(jsonObject_content.getString("protocol"));
+//							svrlist.setArea(jsonObject_content.getString("area"));
+//							svrlist.setPrior(jsonObject_content.getString("prior"));
+
+							// Log.d("LOGG" ,server_list.get(i));
 						}
 
-						JSONObject jsonObject2 = new JSONObject(server_list.get(0).toString());
+						// Log.d("LOG" ,"Business_getsvrlist_response:\n" +
+						// "result:" + result + "\nmesg:" + mesg +
+						// "\nsvrlistArray:" + svrlistArray + "\nleng:" + leng);
 
-						Log.d("LOG" ,"Business_getsvrlist_response:\n" + "result:" + result + "\nmesg:" + mesg + "\nsvrlistArray:" + svrlistArray + "\nleng:" + leng);
-
-						Log.d("LOG" ,"id:" + jsonObject2.getString("id"));
+						// Log.d("LOG" ,"id:" + jsonObject2.getString("id"));
 
 					}
 
@@ -542,6 +593,10 @@ public class Business extends Activity
 				bind();
 				break;
 
+			case R.id.business_coupon:
+				coupon();
+				break;
+
 			case R.id.business_opinion:
 				opinion();
 				break;
@@ -571,6 +626,13 @@ public class Business extends Activity
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void coupon()
+	{
+		// TODO Auto-generated method stub
+		// ****************************************************************************************
+
 	}
 
 	private void exit()
@@ -806,6 +868,10 @@ public class Business extends Activity
 			String build = "57";
 			String dev = android.provider.Settings.Secure.getString(Business.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
 			String lang = Locale.getDefault().getLanguage();
+			if(lang.contains("zh"))
+			{
+				lang = "zh-Hans";
+			}
 			int market = 2;
 			String os = Build.VERSION.RELEASE;
 			int term = 0;
