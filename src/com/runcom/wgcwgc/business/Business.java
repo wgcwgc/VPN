@@ -138,6 +138,11 @@ public class Business extends Activity
 	public void getproducts(View view )
 	{
 
+		Intent intent = new Intent();
+		intent.putExtra("uid" ,"uid");
+		intent.putExtra("type" ,"type");
+		intent.setClass(Business.this ,Getproducts.class);
+		startActivity(intent);
 	}
 
 	@SuppressWarnings("unused")
@@ -514,12 +519,12 @@ public class Business extends Activity
 							server_list.add(svrlistArray.getString(i));
 							JSONObject jsonObject_content = new JSONObject(server_list.get(i).toString());
 							svrlist.setId(jsonObject_content.getString("id"));
-//							svrlist.setName(jsonObject_content.getString("name"));
-//							svrlist.setAddr(jsonObject_content.getString("addr"));
-//							svrlist.setType(jsonObject_content.getString("type"));
-//							svrlist.setProtocol(jsonObject_content.getString("protocol"));
-//							svrlist.setArea(jsonObject_content.getString("area"));
-//							svrlist.setPrior(jsonObject_content.getString("prior"));
+							// svrlist.setName(jsonObject_content.getString("name"));
+							// svrlist.setAddr(jsonObject_content.getString("addr"));
+							// svrlist.setType(jsonObject_content.getString("type"));
+							// svrlist.setProtocol(jsonObject_content.getString("protocol"));
+							// svrlist.setArea(jsonObject_content.getString("area"));
+							// svrlist.setPrior(jsonObject_content.getString("prior"));
 
 							// Log.d("LOGG" ,server_list.get(i));
 						}

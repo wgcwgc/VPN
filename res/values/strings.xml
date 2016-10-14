@@ -10,13 +10,22 @@
     <string name="menu_hello">Hello world!</string>
     <string name="menu_action_settings">设置</string>
     <string name="menu_about">关于</string>
-    
+
     <!-- business main interface -->
     <string name="business_main_botton_getsvrlist">获取服务器列表</string>
-    <string name="business_main_botton_getproducts">获取产品列表</string>
-    <string name="business_main_getsvrlist_textView">服务器展示列表</string>
-    <string name="business_main_getproducts_textView">产品展示列表</string>
     
+    <string name="business_main_getsvrlist_id">服务器展示列表</string>
+    <string name="business_main_getsvrlist_name">服务器线路</string>
+    <string name="business_main_getsvrlist_type">付费类型</string>
+    
+    <string name="business_main_botton_getproducts">获取产品列表</string>
+    
+    <string name="business_main_getproducts_id">产品展示列表</string>
+    <string name="business_main_getproducts_name">服务器线路</string>
+    <string name="business_main_getproducts_type">付费类型</string>
+    <string name="business_main_getproducts_price">价格</string>
+    
+
     <!-- business_menu setting -->
     <string name="business_menu_personInfromation">个人信息</string>
     <string name="business_menu_bind">绑定账号</string>
@@ -93,14 +102,13 @@
     <string name="register_02_okButton">注册</string>
     <string name="register_02_hint">i am hint</string>
     <string name="register_02_cancelButton">获取验证码</string>
-    
-    
+
     <!-- bind setting -->
     <string name="bind_login_hint">请输入您的用户名</string>
     <string name="bind_password_hint">请输入您的密码</string>
     <string name="bind_modify_hint">下面两项修改已有帐号的密码或邮箱 ，为空表示不修改</string>
     <string name="bind_email_hint">请输入您的邮箱账号</string>
     <string name="bind_oldPassword_hint">请输入您原来的密码</string>
-	<string name="bind_submitBotton">修改</string>
-    
+    <string name="bind_submitBotton">修改</string>
+
 </resources>

@@ -1,12 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
 
     <TextView
-        android:id="@+id/business_main_getproducts_textView"
-        android:layout_width="fill_parent"
-        android:layout_height="57dp"
-        android:text="@string/business_main_getproducts_textView" />
+        android:id="@+id/business_main_getproducts_id"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:singleLine="true"
+        android:text="@string/business_main_getproducts_id"
+        android:textSize="17sp" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/business_main_getproducts_name"
+        android:layout_width="125dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="@string/business_main_getproducts_name"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/business_main_getproducts_type"
+        android:layout_width="87dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:singleLine="true"
+        android:text="@string/business_main_getproducts_type"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/business_main_getproducts_price"
+        android:layout_width="87dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:singleLine="true"
+        android:text="@string/business_main_getproducts_price"
+        android:textSize="17sp" />
+
+</LinearLayout>

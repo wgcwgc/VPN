@@ -19,10 +19,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +30,7 @@ import android.widget.TextView;
 
 import com.runcom.wgcwgc.R;
 import com.runcom.wgcwgc.md5.MD5;
+import com.runcom.wgcwgc.util.MyUtil;
 import com.runcom.wgcwgc.web.SSLSocketFactoryEx;
 
 public class Getsvrlist extends Activity
@@ -65,7 +64,7 @@ public class Getsvrlist extends Activity
 		// {
 		// e.printStackTrace();
 		// }
-//		listView.setAdapter(new MyBaseAdapter());
+		// listView.setAdapter(new MyBaseAdapter());
 
 	}
 
@@ -178,18 +177,40 @@ public class Getsvrlist extends Activity
 							server_list.add(svrlistArray.getString(i));
 							JSONObject jsonObject_content = new JSONObject(server_list.get(i).toString());
 
-							svrlist.setId(jsonObject_content.getString("id"));
-//							svrlist.setName(jsonObject_content.getString("name"));
-//							svrlist.setAddr(jsonObject_content.getString("addr"));
-//							svrlist.setType(jsonObject_content.getString("type"));
-//							svrlist.setProtocol(jsonObject_content.getString("protocol"));
-//							svrlist.setArea(jsonObject_content.getString("area"));
-//							svrlist.setPrior(jsonObject_content.getString("prior"));
-							// Log.d("LOG" ,"server_list.get(i):" +
-							// server_list.get(i) + "\nid:" +
-							// jsonObject_content.getString("id"));
+							String id = jsonObject_content.getString("id");
+							String name = jsonObject_content.getString("name");
+							String addr = jsonObject_content.getString("addr");
+							String type = jsonObject_content.getString("type");
+							String protocol = jsonObject_content.getString("protocol");
+							String area = jsonObject_content.getString("area");
+							String prior = jsonObject_content.getString("prior");
+
+							svrlist.setId(id);
+							svrlist.setName(name);
+							svrlist.setAddr(addr);
+							svrlist.setProtocol(protocol);
+							svrlist.setArea(area);
+							svrlist.setPrior(prior);
+
+							String type_hint = "";
+							if(type.contains("0") || type == "0")
+							{
+								type_hint = "免费";
+//								type = "免费";
+							}
+							else
+								if(type.contains("1") || type == "1")
+								{
+
+									type_hint = "收费";
+//									type = "收费";
+								}
+
+							svrlist.setType(type_hint);
+//							String contents = id + "\t" + name + "\t" + type_hint + "\t" + area;
+//							svrlist.setShow(contents);
 							svrList_list.add(svrlist);
-							
+
 						}
 						// Log.d("LOG" ,"svrList.toString():" +
 						// svrList_list.toString());
@@ -209,15 +230,15 @@ public class Getsvrlist extends Activity
 									@Override
 									public void run()
 									{
-										Log.d("LOG" ,"svrList_list:\n" + svrList_list.toString());
+										// Log.d("LOG" ,"svrList_list:\n" +
+										// svrList_list.toString());
 										listView.setAdapter(new MyBaseAdapter());
 									}
 
 								});
 							}
 						}.start();
-						
-						
+
 					}
 
 				}
@@ -240,8 +261,7 @@ public class Getsvrlist extends Activity
 		@Override
 		public int getCount()
 		{
-//			return 0;
-			 return svrList_list.size();
+			return svrList_list.size();
 		}
 
 		@Override
@@ -266,25 +286,7 @@ public class Getsvrlist extends Activity
 		@Override
 		public View getView(final int position , View convertView , ViewGroup parent )
 		{
-			
-			new Thread()
-			{
-				public void run()
-				{
-					runOnUiThread(new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							Log.d("LOG" , "holder running,,,");
-							Log.d("LOG" ,"svrList_list:\n" + svrList_list.toString());
-							
-						}
 
-					});
-				}
-			}.start();
-			
 			Holder holder;
 			if(convertView == null)
 			{
@@ -298,7 +300,11 @@ public class Getsvrlist extends Activity
 				// holder.otherInformation = (TextView)
 				// convertView.findViewById(R.id.other);
 
-				holder.id = (TextView) convertView.findViewById(R.id.business_main_getsvrlist_textView);
+//				holder.show = (TextView) convertView.findViewById(R.id.business_main_getsvrlist_textView_id);
+				holder.id = (TextView) convertView.findViewById(R.id.business_main_getsvrlist_textView_id);
+				holder.name = (TextView) convertView.findViewById(R.id.business_main_getsvrlist_textView_name);
+				holder.type = (TextView) convertView.findViewById(R.id.business_main_getsvrlist_textView_type);
+				
 				convertView.setTag(holder);
 			}
 			else
@@ -309,9 +315,9 @@ public class Getsvrlist extends Activity
 			// holder.userPhoneNumber.setText(addressList.get(position).getPhoneNumber());
 			// holder.otherInformation.setText(addressList.get(position).getOtherImportantInformation());
 
-			
-			
 			holder.id.setText(svrList_list.get(position).getId());
+			holder.name.setText(svrList_list.get(position).getName());
+			holder.type.setText(svrList_list.get(position).getType());
 
 			// TextView textView = (TextView)
 			// convertView.findViewById(R.id.userName);
@@ -321,13 +327,27 @@ public class Getsvrlist extends Activity
 				@Override
 				public void onClick(View view )
 				{
-					// int delay = getItem(position).toString().length();
-					// int delayTime = delay / 17 + 1;
-					// MyUtil.showMsg(Getsvrlist.this
-					// ,getItem(position).toString() ,delayTime);
+					new Thread()
+					{
+						public void run()
+						{
+							runOnUiThread(new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									// Log.d("LOG" ,"svrList_list:\n" +
+									// svrList_list.toString());
 
-					// getCallAndMessage(svrList.get(position).getUserName()
-					// ,svrList.get(position).getPhoneNumber());
+									int delay = getItem(position).toString().length();
+									int delayTime = delay / 17 + 1;
+									MyUtil.showMsg(Getsvrlist.this ,getItem(position).toString() ,delayTime);
+
+								}
+
+							});
+						}
+					}.start();
 				}
 			});
 
@@ -348,15 +368,9 @@ public class Getsvrlist extends Activity
 			return convertView;
 		}
 
-		// @Override
-		// public int getCount()
-		// {
-		// // TODO Auto-generated method stub
-		// return 0;
-		// }
 		class Holder
 		{
-			TextView id;
+			TextView id , show , type , name;
 		}
 
 	}

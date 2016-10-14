@@ -5,9 +5,41 @@
     android:orientation="horizontal" >
 
     <TextView
-        android:id="@+id/business_main_getsvrlist_textView"
-        android:layout_width="wrap_content"
+        android:id="@+id/business_main_getsvrlist_textView_id"
+        android:layout_width="37dp"
         android:layout_height="37dp"
-        android:text="@string/business_main_getsvrlist_textView" />
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:singleLine="true"
+        android:text="@string/business_main_getsvrlist_id"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/business_main_getsvrlist_textView_name"
+        android:layout_width="222dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="@string/business_main_getsvrlist_name"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/business_main_getsvrlist_textView_type"
+        android:layout_width="57dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:singleLine="true"
+        android:text="@string/business_main_getsvrlist_type"
+        android:textSize="17sp" />
 
 </LinearLayout>
