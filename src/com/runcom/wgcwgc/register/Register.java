@@ -62,7 +62,7 @@ public class Register extends Activity
 		// 显示标题
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		actionbar.setTitle(" 注册 ");
+		actionbar.setTitle(" 注册账号 ");
 
 		editText_login = (EditText) findViewById(R.id.register_login);
 		editText_password = (EditText) findViewById(R.id.register_password);
@@ -196,7 +196,7 @@ public class Register extends Activity
 			// Log.d("LOG" ,signValu);
 			String url = "https://a.redvpn.cn:8443/interface/newUser.php?login=" + account + "&pass=" + password + "&chkcode=" + chkcode + "&email=" + email + "&app=" + app + "&build=" + build + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
 			// 第二步：创建代表请求的对象,参数是访问的服务器地址
-			Log.d("LOG" ,url);
+			Log.d("LOG" ,"Register_newUser_url:\n" + url);
 			HttpGet httpGet = new HttpGet(url);
 			try
 			{
@@ -226,7 +226,7 @@ public class Register extends Activity
 					// String email = jsonObject.getString("email");
 					// String session = jsonObject.getString("session");
 
-					Log.d("LOG" ,json_result);
+					Log.d("LOG" ,"Register_newUser_response:\n" + json_result);
 					// Log.d("LOG" ,result.toString());
 					if(result == 0)
 					{

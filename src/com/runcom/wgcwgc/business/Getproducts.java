@@ -2,6 +2,7 @@ package com.runcom.wgcwgc.business;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -14,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -21,12 +23,19 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.runcom.wgcwgc.R;
 import com.runcom.wgcwgc.md5.MD5;
@@ -50,6 +59,17 @@ public class Getproducts extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.business_getproducts_listview);
 
+		ActionBar actionbar = getActionBar();
+		// 显示返回箭头默认是不显示的
+		actionbar.setDisplayHomeAsUpEnabled(false);
+		// 显示左侧的返回箭头，并且返回箭头和title一起设置，返回箭头才能显示
+		actionbar.setDisplayShowHomeEnabled(true);
+		actionbar.setDisplayUseLogoEnabled(true);
+		// 显示标题
+		actionbar.setDisplayShowTitleEnabled(true);
+		actionbar.setDisplayShowCustomEnabled(true);
+		actionbar.setTitle("\t\t\t" + "产品列表");
+
 		intent = getIntent();
 		uid = intent.getStringExtra("uid");
 		type = intent.getStringExtra("type");
@@ -57,6 +77,69 @@ public class Getproducts extends Activity
 		listView = (ListView) findViewById(R.id.business_main_getproducts_listView);
 		getproducts(uid ,type);
 
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu )
+	{
+		// Inflate the menu; this adds items to the action bar if it is present.
+		// getMenuInflater().inflate(R.menu.blank ,menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item )
+	{
+
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+				// actionbar的左侧图标的点击事件处理
+				// finish();
+				Toast.makeText(this ,"返回上一级" ,Toast.LENGTH_LONG).show();
+				onBackPressed();
+				break;
+
+			case R.id.action_settings:
+				Intent upIntent = NavUtils.getParentActivityIntent(this);
+				if(NavUtils.shouldUpRecreateTask(this ,upIntent))
+				{
+					TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
+				}
+				else
+				{
+					upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					NavUtils.navigateUpTo(this ,upIntent);
+				}
+				Toast.makeText(this ,"返回首页" ,Toast.LENGTH_LONG).show();
+				return true;
+
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onMenuOpened(int featureId , Menu menu )
+	{
+
+		if(featureId == Window.FEATURE_ACTION_BAR && menu != null)
+		{
+			if(menu.getClass().getSimpleName().equals("MenuBuilder"))
+			{
+				try
+				{
+					Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible" ,Boolean.TYPE);
+					m.setAccessible(true);
+					m.invoke(menu ,true);
+				}
+				catch(Exception e)
+				{
+					Toast.makeText(this ,"overflow 展开显示item图标异常" ,Toast.LENGTH_LONG).show();
+				}
+			}
+		}
+
+		return super.onMenuOpened(featureId ,menu);
 	}
 
 	private void getproducts(String uid , String type )
@@ -126,7 +209,7 @@ public class Getproducts extends Activity
 			// Log.d("LOG" ,signValu);
 			final String url = "https://a.redvpn.cn:8443/interface/getproducts.php?app=" + app + "&build=" + build + "&uid=" + uid + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
 			// 第二步：创建代表请求的对象,参数是访问的服务器地址
-			// Log.d("LOG" ,"Getproducts_getproducts_url:\n" + url);
+			Log.d("LOG" ,"Getproducts_getproducts_url:\n" + url);
 			HttpGet httpGet = new HttpGet(url);
 			try
 			{
@@ -158,6 +241,8 @@ public class Getproducts extends Activity
 					// final String mesg = jsonObject.getString("mesg");
 					JSONArray products_list_Array = jsonObject.getJSONArray("products");
 					int leng = products_list_Array.length();
+
+					Log.d("LOG" ,"Getproducts_getproducts_response:\n" + returnLine.toString());
 
 					if(result == 0)
 					{
@@ -272,7 +357,7 @@ public class Getproducts extends Activity
 									public void run()
 									{
 										// Log.d("LOG" ,"productsList_list:\n" +
-										// productsList_list.toString());
+										// returnLine.toString());
 										listView.setAdapter(new MyBaseAdapter());
 									}
 

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.runcom.wgcwgc"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="0.8" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -53,9 +53,25 @@
         </activity>
         <activity android:name="com.runcom.wgcwgc.position.Coordinate_1" >
         </activity>
-        <activity android:name="com.runcom.wgcwgc.business.Getsvrlist" >
+        <activity
+            android:name="com.runcom.wgcwgc.business.Getsvrlist"
+            android:icon="@drawable/ic_launcher001"
+            android:parentActivityName="com.runcom.wgcwgc.business.Business" >
         </activity>
-        <activity android:name="com.runcom.wgcwgc.business.Getproducts" >
+        <activity
+            android:name="com.runcom.wgcwgc.business.Getproducts"
+            android:icon="@drawable/ic_launcher001"
+            android:parentActivityName="com.runcom.wgcwgc.business.Business" >
+        </activity>
+        <activity
+            android:name="com.runcom.wgcwgc.business.Usecoupon"
+            android:icon="@drawable/ic_launcher001"
+            android:parentActivityName="com.runcom.wgcwgc.business.Business" >
+        </activity>
+        <activity
+            android:name="com.runcom.wgcwgc.business.GetBonusList"
+            android:icon="@drawable/ic_launcher001"
+            android:parentActivityName="com.runcom.wgcwgc.business.Business" >
         </activity>
     </application>
 

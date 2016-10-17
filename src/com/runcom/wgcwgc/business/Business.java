@@ -23,6 +23,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -90,6 +91,7 @@ public class Business extends Activity
 		mesg = intent.getStringExtra("mesg");
 		uid = intent.getStringExtra("uid");
 		expire = intent.getStringExtra("expire");
+		actionbar.setSubtitle("到期时间：" + expire);
 		freetime = intent.getStringExtra("freetime");
 		flow = intent.getStringExtra("flow");
 		score = intent.getStringExtra("score");
@@ -602,6 +604,10 @@ public class Business extends Activity
 				coupon();
 				break;
 
+			case R.id.business_bonus:
+				bonus();
+				break;
+
 			case R.id.business_opinion:
 				opinion();
 				break;
@@ -633,10 +639,24 @@ public class Business extends Activity
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void bonus()
+	{
+		Intent intent = new Intent();
+		intent.putExtra("login" ,login);
+		intent.putExtra("uid" ,uid);
+		intent.putExtra("type" ,type);
+		intent.setClass(Business.this ,GetBonusList.class);
+		startActivity(intent);
+	}
+
 	private void coupon()
 	{
-		// TODO Auto-generated method stub
-		// ****************************************************************************************
+		Intent intent = new Intent();
+		intent.putExtra("login" ,login);
+		intent.putExtra("uid" ,uid);
+		intent.putExtra("coupon" ,coupon);
+		intent.setClass(Business.this ,Usecoupon.class);
+		startActivity(intent);
 
 	}
 
@@ -922,7 +942,7 @@ public class Business extends Activity
 					// JSONObject jsonObject = new JSONObject(json_result);
 					JSONObject jsonObject = new JSONObject(returnLine);
 
-					Log.d("LOG" ,"Business_getver_response_result:\n" + returnLine);
+					Log.d("LOG" ,"Business_getver_response:\n" + returnLine);
 
 					Long result = jsonObject.getLong("result");
 					final String mesg = jsonObject.getString("mesg");
@@ -935,7 +955,8 @@ public class Business extends Activity
 					String [] min_string = min.split("\\.");
 					String [] latest_string = latest.split("\\.");
 
-					Log.d("LOG" ,"Business_getver_response_version:\nmin:" + min + "\nlatest:" + latest);
+					// Log.d("LOG" ,"Business_getver_response_version:\nmin:" +
+					// min + "\nlatest:" + latest);
 
 					Long ver_first = Long.valueOf(ver_string[0]);
 					Long ver_second = Long.valueOf(ver_string[1]);
@@ -962,12 +983,22 @@ public class Business extends Activity
 										public void run()
 										{
 											// 强制更新
-											// new MandatoryUpdate(Business.this
-											// , content , install).show();
-											Intent intent_cheackNewVersion = new Intent(Intent.ACTION_VIEW);
-											intent_cheackNewVersion.setData(Uri.parse(install));
-											startActivity(intent_cheackNewVersion);
-											finish();
+											Builder alertDialog = new AlertDialog.Builder(Business.this);
+											alertDialog.setTitle("强制更新");
+											alertDialog.setMessage(content);
+											// alertDialog.setCancelable(false);
+											alertDialog.setCancelable(true);
+											alertDialog.setPositiveButton("确定" ,new DialogInterface.OnClickListener()
+											{
+												@Override
+												public void onClick(DialogInterface dialog , int which )
+												{
+													Intent intent_cheackNewVersion = new Intent(Intent.ACTION_VIEW);
+													intent_cheackNewVersion.setData(Uri.parse(install));
+													startActivity(intent_cheackNewVersion);
+													finish();
+												}
+											}).show();
 										}
 
 									});
@@ -975,7 +1006,25 @@ public class Business extends Activity
 							}.start();
 						}
 						else
-							if((ver_first > min_first && ver_first < latest_first) || (ver_first == latest_first && ver_second < latest_second))
+							if((ver_first >= latest_first && ver_second >= latest_second))
+							{
+								new Thread()
+								{
+									public void run()
+									{
+										runOnUiThread(new Runnable()
+										{
+											@Override
+											public void run()
+											{
+												Toast.makeText(Business.this ,"已更新至最新版" ,Toast.LENGTH_LONG).show();
+											}
+
+										});
+									}
+								}.start();
+							}
+							else
 							{
 								new Thread()
 								{
@@ -987,7 +1036,7 @@ public class Business extends Activity
 											public void run()
 											{
 												AlertDialog.Builder builder = new AlertDialog.Builder(Business.this);
-												builder.setTitle("更新");
+												builder.setTitle("更新说明");
 												builder.setMessage(content);
 
 												builder.setCancelable(false);
@@ -1023,24 +1072,7 @@ public class Business extends Activity
 								}.start();
 
 							}
-							else
-							{
-								new Thread()
-								{
-									public void run()
-									{
-										runOnUiThread(new Runnable()
-										{
-											@Override
-											public void run()
-											{
-												Toast.makeText(Business.this ,"已更新至最新版" ,Toast.LENGTH_LONG).show();
-											}
 
-										});
-									}
-								}.start();
-							}
 					}
 					else
 					{

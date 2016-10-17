@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/business_usecoupon_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/business_usecoupon_button"
+        android:layout_alignBottom="@+id/business_usecoupon_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/business_usecoupon_button"
+        android:layout_toStartOf="@+id/business_usecoupon_button"
+        android:ems="10"
+        android:hint="@string/usecoupon_editText_hint"
+        android:inputType="text" >
+    </EditText>
+
+    <Button
+        android:id="@+id/business_usecoupon_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="24dp"
+        android:onClick="getCoupon"
+        android:text="@string/usecoupon_button_hint" />
+
+</RelativeLayout>

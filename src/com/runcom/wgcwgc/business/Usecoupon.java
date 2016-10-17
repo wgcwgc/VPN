@@ -34,20 +34,18 @@ import com.runcom.wgcwgc.R;
 import com.runcom.wgcwgc.md5.MD5;
 import com.runcom.wgcwgc.web.SSLSocketFactoryEx;
 
-public class Bind extends Activity
+public class Usecoupon extends Activity
 {
-	private EditText editText_login , editText_password , editText_oldPassword ,
-	        editText_email;
-	// private Button button_submit;
+	private EditText editText;
 
-	private String login , password , email , oldPassword;
-	String app;
+	@SuppressWarnings("unused")
+	private String login , uid , coupon;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.bind);
+		setContentView(R.layout.business_usecoupon);
 
 		ActionBar actionbar = getActionBar();
 		// 显示返回箭头默认是不显示的
@@ -58,61 +56,63 @@ public class Bind extends Activity
 		// 显示标题
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		actionbar.setTitle(" 绑定账号 ");
-		
-		editText_login = (EditText) findViewById(R.id.bind_login);
-		editText_password = (EditText) findViewById(R.id.bind_password);
-		editText_oldPassword = (EditText) findViewById(R.id.bind_oldPassword);
-		editText_email = (EditText) findViewById(R.id.bind_email);
+		actionbar.setTitle(" 领取奖励 ");
 
 	}
 
-	public void submit(View view )
+	public void getCoupon(View view )
 	{
-		login = editText_login.getText().toString();
-		password = editText_password.getText().toString();
-		email = editText_email.getText().toString();
-		oldPassword = editText_oldPassword.getText().toString();
+		editText = (EditText) findViewById(R.id.business_usecoupon_editText);
+		coupon = editText.getText().toString();
 
-		GetThread_submit getThread_submit = new GetThread_submit(login , password , oldPassword , email);
-		getThread_submit.start();
+		Intent intent = getIntent();
+		login = intent.getStringExtra("name");
+		uid = intent.getStringExtra("uid");
+		useCoupon(uid ,coupon);
 
 	}
 
-	class GetThread_submit extends Thread
+	private void useCoupon(String uid , String coupon )
 	{
+		GetThread_useCoupon getThread_useCoupon = new GetThread_useCoupon(uid , coupon);
+		getThread_useCoupon.start();
+	}
 
-		String account;
-		String password;
-		String oldPassword;
-		String email;
+	class GetThread_useCoupon extends Thread
+	{
+		String uid;
+		String coupon;
 
-		public GetThread_submit(String account , String password , String oldPassword , String email)
+		public GetThread_useCoupon()
 		{
-			this.account = account;
-			this.password = password;
-			this.email = email;
-			this.oldPassword = oldPassword;
+
+		}
+
+		public GetThread_useCoupon(String uid , String coupon)
+		{
+			this.uid = uid;
+			this.coupon = coupon;
 		}
 
 		@SuppressLint("DefaultLocale")
 		@Override
 		public void run()
 		{
-			PackageManager packageManager = Bind.this.getPackageManager();
+			String app = null;
+			PackageManager packageManager = Usecoupon.this.getPackageManager();
 			PackageInfo packageInfo = null;
 			try
 			{
-				packageInfo = packageManager.getPackageInfo(Bind.this.getPackageName() ,0);
+				packageInfo = packageManager.getPackageInfo(Usecoupon.this.getPackageName() ,0);
 				int labelRes = packageInfo.applicationInfo.labelRes;
-				app = Bind.this.getResources().getString(labelRes);
+				app = Usecoupon.this.getResources().getString(labelRes);
 			}
 			catch(NameNotFoundException e)
 			{
 				Log.d("LOG" ,"serverJudge_package exception:" + e.toString());
 			}
 			String build = "57";
-			String dev = android.provider.Settings.Secure.getString(Bind.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
+			String dev = android.provider.Settings.Secure.getString(Usecoupon.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
 			String lang = Locale.getDefault().getLanguage();
 			int market = 2;
 			String os = Build.VERSION.RELEASE;
@@ -123,24 +123,20 @@ public class Bind extends Activity
 			// HttpClient httpClient = new DefaultHttpClient();
 			HttpClient httpClient = SSLSocketFactoryEx.getNewHttpClient();// getNewHttpClient
 
-			// https://a.redvpn.cn:8443/interface/
-			// *************************************************************************************************************************************
+			dev = android.provider.Settings.Secure.getString(Usecoupon.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
 
-			// term = 0;
-			// os = Build.VERSION.RELEASE;
-			dev = android.provider.Settings.Secure.getString(Bind.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
-
-			String signValu = "tuoyouvpn" + app + build + dev + email + lang + account + market + oldPassword + os + password + term + ver;
+			String signValu = "tuoyouvpn" + app + build + coupon + dev + lang + market + os + term + uid + ver;
 			signValu = new MD5().md5(signValu).toUpperCase();
 			// Log.d("LOG" ,signValu);
-			String url = "https://a.redvpn.cn:8443/interface/dobind.php?login=" + account + "&pass=" + password + "&email=" + email + "&app=" + app + "&oldpass=" + oldPassword + "&build=" + build + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
+			String url = "https://a.redvpn.cn:8443/interface/usecoupon.php?app=" + app + "&uid=" + uid + "&coupon=" + coupon + "&build=" + build + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
 			// 第二步：创建代表请求的对象,参数是访问的服务器地址
 			// url = toURLEncoded(url);
 			// System.out.println(url);
-			Log.d("LOG" ,"Bind_dobind_url:\n" + url);
+			Log.d("LOG" ,"Usecoupon_usecoupon_url:\n" + url);
 			// System.out.println(new
 			// MD5().md5("runcom8888123@abc.comxyz9.3.26666").toUpperCase());
 			HttpGet httpGet = new HttpGet(url);
+
 			try
 			{
 				// 第三步：执行请求，获取服务器发还的相应对象
@@ -169,7 +165,7 @@ public class Bind extends Activity
 					// String email = jsonObject.getString("email");
 					// String session = jsonObject.getString("session");
 
-					Log.d("LOG" ,"Bind_dobind_reponse:\n" + json_result);
+					Log.d("LOG" ,"Usecoupon_Usecoupon_reponse:\n" + json_result);
 					// Log.d("LOG" ,result.toString());
 					if(result == 0)
 					{
@@ -178,35 +174,18 @@ public class Bind extends Activity
 						{
 							public void run()
 							{
-								// 这儿是耗时操作，完成之后更新UI；
 								runOnUiThread(new Runnable()
 								{
-
 									@Override
 									public void run()
 									{
 										// 更新UI
-										// textView_hint.setText(" ");
-										// String contents =
-										// "请仔细核对信息\n账号：\n\t\t\t\t" + login +
-										// "\n密码：\n\t\t\t\t" + password +
-										// "\n邮箱：\n\t\t\t\t" + email;
-										// System.out.println(contents);
-										// Toast.makeText(Bind.this ,contents
-										// ,Toast.LENGTH_LONG).show();
-
-										Toast.makeText(Bind.this ,"恭喜您： " + "\n\t\t\t\t修改成功！！！" ,Toast.LENGTH_LONG).show();
-										finish();
+										Toast.makeText(Usecoupon.this ,mesg ,Toast.LENGTH_LONG).show();
 									}
 
 								});
 							}
 						}.start();
-						// Toast.makeText(Register.this ,mesg
-						// ,Toast.LENGTH_LONG).show();
-						// Log.d("LOG" ,mesg);
-						// System.out.println(mesg);
-						// button_submit.setEnabled(true);
 
 					}
 					else
@@ -215,47 +194,19 @@ public class Bind extends Activity
 						{
 							public void run()
 							{
-								// 这儿是耗时操作，完成之后更新UI；
 								runOnUiThread(new Runnable()
 								{
 
 									@Override
 									public void run()
 									{
-										// 更新UI
-										// textView_hint.setText(mesg);
-										Toast.makeText(Bind.this ,mesg ,Toast.LENGTH_LONG).show();
+										Toast.makeText(Usecoupon.this ,mesg ,Toast.LENGTH_LONG).show();
 									}
 
 								});
 							}
 						}.start();
 					}
-					// System.out.println(result);
-					// Toast.makeText(MainActivity.this ,result
-					// ,Toast.LENGTH_LONG).show();
-					// Intent intent = new Intent();
-					// intent.setClass(Register.this ,Business.class);
-					// intent.putExtra("login" ,account);
-					// intent.putExtra("pass" ,password);
-					//
-					// intent.putExtra("result" ,result);
-					// intent.putExtra("mesg" ,mesg);
-					// intent.putExtra("uid" ,uid);
-					// intent.putExtra("expire" ,expire);
-					// intent.putExtra("freetime" ,freetime);
-					// intent.putExtra("flow" ,flow);
-					// intent.putExtra("score" ,score);
-					// intent.putExtra("coupon" ,coupon);
-					// intent.putExtra("type" ,type);
-					// intent.putExtra("email" ,email);
-					// intent.putExtra("session" ,session);
-
-					// startActivity(intent);
-					// Toast.makeText(Register.this ,"恭喜您\n\t注册成功！！！"
-					// ,Toast.LENGTH_LONG).show();
-					// finish();
-					// System.out.println("test02");
 
 				}
 			}
@@ -267,7 +218,7 @@ public class Bind extends Activity
 		}
 
 	}
-	
+
 	@Override
 	public boolean onMenuOpened(int featureId , Menu menu )
 	{
@@ -295,7 +246,7 @@ public class Bind extends Activity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-//		getMenuInflater().inflate(R.menu.main ,menu);
+		// getMenuInflater().inflate(R.menu.main ,menu);
 		return true;
 	}
 
@@ -329,5 +280,4 @@ public class Bind extends Activity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 }

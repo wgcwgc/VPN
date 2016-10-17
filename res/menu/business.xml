@@ -9,10 +9,14 @@
         android:id="@+id/business_bind"
         android:showAsAction="never"
         android:title="@string/business_menu_bind"/>
-    <item 
+    <item
         android:id="@+id/business_coupon"
         android:showAsAction="never"
         android:title="@string/business_menu_coupon"/>
+    <item
+        android:id="@+id/business_bonus"
+        android:showAsAction="never"
+        android:title="@string/business_menu_bonus"/>
     <item
         android:id="@+id/business_opinion"
         android:showAsAction="never"
