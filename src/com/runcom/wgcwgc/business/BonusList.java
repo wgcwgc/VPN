@@ -166,7 +166,7 @@ public class BonusList
 	@Override
 	public String toString()
 	{
-		return "BonusList [id=" + id + ", title=" + title + ", reason=" + reason + ", type=" + type + ", value=" + value + ", bonusdate=" + bonusdate + ", hasgot=" + hasgot + ", gotdate=" + gotdate + "]";
+		return "id=" + id + "\ntitle=" + title + "\nreason=" + reason + "\ntype=" + type + "\nvalue=" + value + "\nbonusdate=" + bonusdate + "\nhasgot=" + hasgot + "\ngotdate=" + gotdate + "\n";
 	}
 
 }

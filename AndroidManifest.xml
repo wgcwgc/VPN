@@ -73,6 +73,11 @@
             android:icon="@drawable/ic_launcher001"
             android:parentActivityName="com.runcom.wgcwgc.business.Business" >
         </activity>
+        <activity
+            android:name="com.runcom.wgcwgc.business.AcceptBonus"
+            android:icon="@drawable/ic_launcher001"
+            android:parentActivityName="com.runcom.wgcwgc.business.Business" >
+        </activity>
     </application>
 
 </manifest>

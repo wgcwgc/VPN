@@ -356,8 +356,6 @@ public class Getproducts extends Activity
 									@Override
 									public void run()
 									{
-										// Log.d("LOG" ,"productsList_list:\n" +
-										// returnLine.toString());
 										listView.setAdapter(new MyBaseAdapter());
 									}
 
@@ -371,9 +369,6 @@ public class Getproducts extends Activity
 			}
 			catch(Exception e)
 			{
-				// Log.d("LOG"
-				// ,"Getproducts_getproducts_GetThread_submit_http_bug:\n" +
-				// e.toString());
 				e.printStackTrace();
 			}
 
@@ -456,6 +451,11 @@ public class Getproducts extends Activity
 							});
 						}
 					}.start();
+
+					// TODO Auto-generated method stub
+					// This can add buy system.
+					// ******************************************************************************************
+
 				}
 			});
 

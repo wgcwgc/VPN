@@ -14,8 +14,7 @@
         android:layout_toLeftOf="@+id/business_usecoupon_button"
         android:layout_toStartOf="@+id/business_usecoupon_button"
         android:ems="10"
-        android:hint="@string/usecoupon_editText_hint"
-        android:inputType="text" >
+        android:hint="@string/usecoupon_editText_hint" >
     </EditText>
 
     <Button

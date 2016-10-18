@@ -26,20 +26,27 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.runcom.wgcwgc.R;
 import com.runcom.wgcwgc.md5.MD5;
+import com.runcom.wgcwgc.util.MyUtil;
 import com.runcom.wgcwgc.web.SSLSocketFactoryEx;
 
 public class GetBonusList extends Activity
 {
 	public Intent intent;
-	public String uid , type;
+	public String uid , type , id;
 	public String app;
 
 	public ListView listView;
@@ -98,8 +105,6 @@ public class GetBonusList extends Activity
 		@Override
 		public void run()
 		{
-			// TODO Auto-generated method stub
-
 			PackageManager packageManager = GetBonusList.this.getPackageManager();
 			PackageInfo packageInfo = null;
 			try
@@ -110,10 +115,6 @@ public class GetBonusList extends Activity
 			}
 			catch(NameNotFoundException e)
 			{
-				// Log.d("LOG"
-				// ,"GetBonusList_getBonusList_serverJudge_package_exception:\n"
-				// +
-				// e.toString());
 				e.printStackTrace();
 			}
 			String build = "57";
@@ -134,9 +135,9 @@ public class GetBonusList extends Activity
 
 			dev = android.provider.Settings.Secure.getString(GetBonusList.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
 
-			String signValu = "tuoyouvpn" + app + build + dev + lang + market + os + term + type + uid + ver;
+			String signValu = "tuoyouvpn" + app + build + dev + lang + market + os + term + uid + ver;
 			signValu = new MD5().md5(signValu).toUpperCase();
-			String url = "https://a.redvpn.cn:8443/interface/getbonuslist.php?app=" + app + "&build=" + build + "&uid=" + uid + "&type=" + type + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
+			String url = "https://a.redvpn.cn:8443/interface/getbonuslist.php?app=" + app + "&build=" + build + "&uid=" + uid + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
 			// 第二步：创建代表请求的对象,参数是访问的服务器地址
 			Log.d("LOG" ,"GetBonusList_getbonuslist_url:\n" + url);
 			HttpGet httpGet = new HttpGet(url);
@@ -173,62 +174,35 @@ public class GetBonusList extends Activity
 
 					if(result == 0)
 					{
-
 						bonusList_list = new ArrayList < BonusList >();
-						List < String > bonus_list = new ArrayList < String >();
+						final List < String > bonus_list = new ArrayList < String >();
 						for(int i = 0 ; i < leng ; i ++ )
 						{
-							 bonuslist = new BonusList();
-//							 Log.d("LOG" ,"mesg:" + mesg + "\n");
-							 bonus_list.add(BonusListArray.getString(i));
-							 JSONObject jsonObject_content = new JSONObject(bonus_list.get(i).toString());
+							bonuslist = new BonusList();
+							bonus_list.add(BonusListArray.getString(i));
+							JSONObject jsonObject_content = new JSONObject(bonus_list.get(i).toString());
 
-							String id = jsonObject_content.getString("id");
-							String title = jsonObject_content.getString("name");
-							String addr = jsonObject_content.getString("addr");
+							id = jsonObject_content.getString("id");
+							String title = jsonObject_content.getString("title");
+							String reason = jsonObject_content.getString("reason");
 							String type = jsonObject_content.getString("type");
-							String protocol = jsonObject_content.getString("protocol");
-							String area = jsonObject_content.getString("area");
-							String prior = jsonObject_content.getString("prior");
+							String value = jsonObject_content.getString("value");
+							String bunusdate = jsonObject_content.getString("bunusdate");
+							String hasgot = jsonObject_content.getString("hasgot");
+							String gotdate = jsonObject_content.getString("gotdate");
 
-							 bonuslist.setId(id);
-							 bonuslist.setTitle(title);
-							 bonuslist.setReason(addr);
-							 bonuslist.setType(protocol);
-							 bonuslist.setValue(area);
-							 bonuslist.setBonusdate(prior);
-							 bonuslist.setHasgot(prior);
-							 bonuslist.setGotdate(prior);
+							bonuslist.setId(id);
+							bonuslist.setTitle(title);
+							bonuslist.setReason(reason);
+							bonuslist.setType(type);
+							bonuslist.setValue(value);
+							bonuslist.setBonusdate(bunusdate);
+							bonuslist.setHasgot(hasgot);
+							bonuslist.setGotdate(gotdate);
 
-							@SuppressWarnings("unused")
-							String type_hint = "";
-							if(type.contains("0") || type == "0")
-							{
-								type_hint = "免费";
-								// type = "免费";
-							}
-							else
-								if(type.contains("1") || type == "1")
-								{
-
-									type_hint = "收费";
-									// type = "收费";
-								}
-
-							// BonusList.setType(type_hint);
-							// svrList_list.add(BonusList);
+							bonusList_list.add(bonuslist);
 
 						}
-						// Log.d("LOG" ,"svrList.toString():" +
-						// svrList_list.toString());
-
-						// Log.d("LOG" ,"GetBonusList_getBonusList_response:\n"
-						// +
-						// "result:" + result + "\nmesg:" + mesg +
-						// "\nBonusListArray:" + BonusListArray + "\nleng:" +
-						// leng);
-
-						// Log.d("LOG" ,"id:" + jsonObject2.getString("id"));
 
 						new Thread()
 						{
@@ -239,10 +213,17 @@ public class GetBonusList extends Activity
 									@Override
 									public void run()
 									{
-										// Log.d("LOG" ,"svrList_list:\n" +
-										// svrList_list.toString());
-										// listView.setAdapter(new
-										// MyBaseAdapter());
+										// Log.d("LOG"
+										// ,"GetBonusList_getbonuslist_response:\n"
+										// + bonusList_list.toString());
+										if(bonus_list.isEmpty())
+										{
+											MyUtil.showMsg(GetBonusList.this ,"您还未领取奖励" ,5);
+										}
+										else
+										{
+											listView.setAdapter(new MyBaseAdapter());
+										}
 									}
 
 								});
@@ -255,14 +236,201 @@ public class GetBonusList extends Activity
 			}
 			catch(Exception e)
 			{
-				// Log.d("LOG"
-				// ,"GetBonusList_getBonusList_GetThread_submit_http_bug:\n" +
-				// e.toString());
+				Log.d("LOG" ,"GetBonusList_getBonusList_GetThread_submit_http_bug:\n" + e.toString());
 				e.printStackTrace();
 			}
 
 		}
 
+	}
+
+	class MyBaseAdapter extends BaseAdapter
+	{
+		@Override
+		public int getCount()
+		{
+			return bonusList_list.size();
+		}
+
+		@Override
+		public Object getItem(int position )
+		{
+			return bonusList_list.get(position);
+		}
+
+		@Override
+		public long getItemId(int position )
+		{
+			return position;
+		}
+
+		@SuppressLint(
+		{ "InflateParams", "DefaultLocale" })
+		@Override
+		public View getView(final int position , View convertView , ViewGroup parent )
+		{
+
+			Holder holder;
+			if(convertView == null)
+			{
+				getLayoutInflater();
+				convertView = LayoutInflater.from(GetBonusList.this).inflate(R.layout.business_bonuslist ,null);
+				holder = new Holder();
+				holder.id = (TextView) convertView.findViewById(R.id.business_main_getbonuslist_textView_id);
+				holder.title = (TextView) convertView.findViewById(R.id.business_main_getbonuslist_textView_title);
+				holder.reason = (TextView) convertView.findViewById(R.id.business_main_getbonuslist_textView_reason);
+
+				convertView.setTag(holder);
+			}
+			else
+			{
+				holder = (Holder) convertView.getTag();
+			}
+
+			holder.id.setText(bonusList_list.get(position).getId());
+			holder.title.setText(bonusList_list.get(position).getTitle());
+			holder.reason.setText(bonusList_list.get(position).getReason());
+
+			final Button button = (Button) convertView.findViewById(R.id.business_main_getbonuslist_button);
+			if(bonusList_list.get(position).getHasgot().contains("1") || bonusList_list.get(position).getHasgot() == "1")
+			{
+				button.setText("已领取");
+				button.setEnabled(false);
+			}
+			else
+			{
+				// \(^o^)/YES!
+			}
+
+			button.setOnClickListener(new View.OnClickListener()
+			{
+
+				@Override
+				public void onClick(View v )
+				{
+					PackageManager packageManager = GetBonusList.this.getPackageManager();
+					PackageInfo packageInfo = null;
+					try
+					{
+						packageInfo = packageManager.getPackageInfo(GetBonusList.this.getPackageName() ,0);
+						int labelRes = packageInfo.applicationInfo.labelRes;
+						app = GetBonusList.this.getResources().getString(labelRes);
+					}
+					catch(NameNotFoundException e)
+					{
+						e.printStackTrace();
+					}
+					String build = "57";
+					String dev = android.provider.Settings.Secure.getString(GetBonusList.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
+					String lang = Locale.getDefault().getLanguage();
+					if(lang.contains("zh"))
+					{
+						lang = "zh-Hans";
+					}
+					int market = 2;
+					String os = Build.VERSION.RELEASE;
+					int term = 0;
+					String ver = packageInfo.versionName;
+
+					HttpClient httpClient = SSLSocketFactoryEx.getNewHttpClient();// getNewHttpClient
+
+					dev = android.provider.Settings.Secure.getString(GetBonusList.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
+
+					String signValu = "tuoyouvpn" + app + build + dev + id + lang + market + os + term + uid + ver;
+					signValu = new MD5().md5(signValu).toUpperCase();
+					String url = "https://a.redvpn.cn:8443/interface/acceptbonus.php?app=" + app + "&id=" + id + "&build=" + build + "&uid=" + uid + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
+					// 第二步：创建代表请求的对象,参数是访问的服务器地址
+					Log.d("LOG" ,"GetBonusList_acceptbonus_url:\n" + url);
+					HttpGet httpGet = new HttpGet(url);
+
+					try
+					{
+						// 第三步：执行请求，获取服务器发还的相应对象
+						HttpResponse response = httpClient.execute(httpGet);
+						// System.out.println("test00");
+						// 第四步：检查相应的状态是否正常：检查状态码的值是200表示正常
+						if(response.getStatusLine().getStatusCode() == 200)
+						{
+							// 第五步：从相应对象当中取出数据，放到entity当中
+							// System.out.println("test01");
+							HttpEntity entity = response.getEntity();
+							BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
+							// String json_result = reader.readLine();
+							// JSONObject jsonObject = new
+							// JSONObject(json_result);
+
+							String line = "";
+							String returnLine = "";
+							while((line = reader.readLine()) != null)
+							{
+								returnLine += line;
+								// System.out.println("*" + line + "*\n");
+							}
+							Log.d("LOG" ,"GetBonuslist_acceptbonus_response:\n" + returnLine);
+							JSONObject jsonObject = new JSONObject(returnLine);
+							// String result = jsonObject.getString("result");
+							Long result = jsonObject.getLong("result");
+							String mesg = jsonObject.getString("mesg");
+							// JSONArray BonusListArray =
+							// jsonObject.getJSONArray("buyinfo");
+							// int leng = BonusListArray.length();
+
+							if(result == 0)
+							{
+								button.setText("已领取");
+								button.setEnabled(false);
+								MyUtil.showMsg(GetBonusList.this ,"领取成功" ,5);
+							}
+							else
+							{
+								MyUtil.showMsg(GetBonusList.this ,mesg ,5);
+							}
+
+						}
+					}
+					catch(Exception e)
+					{
+						Log.d("LOG" ,"GetBonusList_getBonusList_GetThread_submit_http_bug:\n" + e.toString());
+						e.printStackTrace();
+					}
+
+				}
+			});
+
+			convertView.setOnClickListener(new View.OnClickListener()
+			{
+
+				@Override
+				public void onClick(View view )
+				{
+					new Thread()
+					{
+						public void run()
+						{
+							runOnUiThread(new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									int delay = getItem(position).toString().length();
+									int delayTime = delay / 17 + 1;
+									MyUtil.showMsg(GetBonusList.this ,getItem(position).toString() ,delayTime);
+
+								}
+
+							});
+						}
+					}.start();
+				}
+			});
+
+			return convertView;
+		}
+
+		class Holder
+		{
+			TextView id , show , type , title , reason;
+		}
 	}
 
 	@Override

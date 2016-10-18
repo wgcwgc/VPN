@@ -608,6 +608,10 @@ public class Business extends Activity
 				bonus();
 				break;
 
+			// case R.id.business_accept_bonus:
+			// acceptBonus();
+			// break;
+
 			case R.id.business_opinion:
 				opinion();
 				break;
@@ -637,6 +641,16 @@ public class Business extends Activity
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	@SuppressWarnings("unused")
+	private void acceptBonus()
+	{
+		Intent intent = new Intent();
+		intent.putExtra("login" ,login);
+		intent.putExtra("uid" ,uid);
+		intent.setClass(Business.this ,AcceptBonus.class);
+		startActivity(intent);
 	}
 
 	private void bonus()

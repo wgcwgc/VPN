@@ -18,6 +18,10 @@
         android:showAsAction="never"
         android:title="@string/business_menu_bonus"/>
     <item
+        android:id="@+id/business_accept_bonus"
+        android:showAsAction="never"
+        android:title="@string/business_menu_accept_bonus"/>
+    <item
         android:id="@+id/business_opinion"
         android:showAsAction="never"
         android:title="@string/business_menu_opinion"/>

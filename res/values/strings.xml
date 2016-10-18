@@ -13,11 +13,11 @@
 
     <!-- business_main interface -->
     <string name="business_main_botton_getsvrlist">获取服务器列表</string>
-    <string name="business_main_getsvrlist_id">服务器展示列表</string>
+    <string name="business_main_getsvrlist_id">服务器ID</string>
     <string name="business_main_getsvrlist_name">服务器线路</string>
     <string name="business_main_getsvrlist_type">付费类型</string>
     <string name="business_main_botton_getproducts">获取产品列表</string>
-    <string name="business_main_getproducts_id">产品展示列表</string>
+    <string name="business_main_getproducts_id">产品ID</string>
     <string name="business_main_getproducts_name">服务器线路</string>
     <string name="business_main_getproducts_type">付费类型</string>
     <string name="business_main_getproducts_price">价格</string>
@@ -27,6 +27,7 @@
     <string name="business_menu_bind">绑定账号</string>
     <string name="business_menu_coupon">使用优惠券</string>
     <string name="business_menu_bonus">奖励列表</string>
+    <string name="business_menu_accept_bonus">领取奖励</string>
     <string name="business_menu_opinion">意见反馈</string>
     <string name="business_menu_cheakNewVersion">检查新版本</string>
     <string name="business_menu_about">关于我们</string>
@@ -111,5 +112,11 @@
     <!-- usecoupon setting -->
     <string name="usecoupon_editText_hint">请输入您的优惠码</string>
     <string name="usecoupon_button_hint">领取</string>
+
+    <!-- getbonuslist setting -->
+    <string name="getbonuslist_id">奖励ID</string>
+    <string name="getbonuslist_title">奖励标题</string>
+    <string name="getbonuslist_reason">奖励原因</string>
+    <string name="getbonuslist_button">领取</string>
 
 </resources>

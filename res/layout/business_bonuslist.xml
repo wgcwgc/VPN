@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/business_main_getbonuslist_textView_id"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:singleLine="true"
+        android:text="@string/getbonuslist_id"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/business_main_getbonuslist_textView_title"
+        android:layout_width="111dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="@string/getbonuslist_title"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/business_main_getbonuslist_textView_reason"
+        android:layout_width="57dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:singleLine="true"
+        android:text="@string/getbonuslist_reason"
+        android:textSize="17sp" />
+
+    <Button
+        android:id="@+id/business_main_getbonuslist_button"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:singleLine="true"
+        android:text="@string/getbonuslist_button" />
+
+</LinearLayout>
