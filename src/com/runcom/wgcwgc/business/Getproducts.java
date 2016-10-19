@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -257,23 +258,6 @@ public class Getproducts extends Activity
 							// Log.d("LOG" ,products_list.get(i));
 							JSONObject jsonObject_content = new JSONObject(products_list.get(i).toString());
 
-							// new Thread()
-							// {
-							// public void run()
-							// {
-							// runOnUiThread(new Runnable()
-							// {
-							// @Override
-							// public void run()
-							// {
-							// Log.d("LOG" ,"http请求执行了" +
-							// jsonObject_content.toString());
-							// }
-							//
-							// });
-							// }
-							// }.start();
-
 							String id = jsonObject_content.getString("id");
 							String name = jsonObject_content.getString("name");
 							String desc = jsonObject_content.getString("desc");
@@ -376,6 +360,133 @@ public class Getproducts extends Activity
 
 	}
 
+	public void neworder(String uid , String product )
+	{
+		Neworder neworder = new Neworder(uid , product);
+		neworder.start();
+	}
+
+	class Neworder extends Thread
+	{
+		private String uid , product;
+		private String app;
+
+		public Neworder()
+		{
+
+		}
+
+		public Neworder(String uid , String product)
+		{
+			this.uid = uid;
+			this.product = product;
+		}
+
+		@SuppressLint("DefaultLocale")
+		@Override
+		public void run()
+		{
+			PackageManager packageManager = Getproducts.this.getPackageManager();
+			PackageInfo packageInfo = null;
+			try
+			{
+				packageInfo = packageManager.getPackageInfo(Getproducts.this.getPackageName() ,0);
+				int labelRes = packageInfo.applicationInfo.labelRes;
+				app = Getproducts.this.getResources().getString(labelRes);
+			}
+			catch(NameNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+			String build = "57";
+			String dev = android.provider.Settings.Secure.getString(Getproducts.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
+			String lang = Locale.getDefault().getLanguage();
+			if(lang.contains("zh"))
+			{
+				lang = "zh-Hans";
+			}
+			int market = 2;
+			String os = Build.VERSION.RELEASE;
+			int term = 0;
+			String ver = packageInfo.versionName;
+
+			HttpClient httpClient = SSLSocketFactoryEx.getNewHttpClient();// getNewHttpClient
+
+			dev = android.provider.Settings.Secure.getString(Getproducts.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
+			String type_pay = "1";
+			String source = "0";
+			String channel = "0";
+
+			String signValu = "tuoyouvpn" + app + build + channel + dev + lang + market + os + product + source + term + type_pay + uid + ver;
+			signValu = new MD5().md5(signValu).toUpperCase();
+			// Log.d("LOG" ,signValu);
+			final String url = "https://a.redvpn.cn:8443/interface/neworder.php?app=" + app + "&build=" + build + "&product=" + product + "&channel=" + channel + "&type=" + type_pay + "&source=" + source + "&uid=" + uid + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
+			// 第二步：创建代表请求的对象,参数是访问的服务器地址
+
+			Log.d("LOG" ,"Getproducts_neworder_url:\n" + url);
+			HttpGet httpGet = new HttpGet(url);
+
+			try
+			{
+				// 第三步：执行请求，获取服务器发还的相应对象
+				HttpResponse response = httpClient.execute(httpGet);
+				// 第四步：检查相应的状态是否正常：检查状态码的值是200表示正常
+				if(response.getStatusLine().getStatusCode() == 200)
+				{
+					// 第五步：从相应对象当中取出数据，放到entity当中
+					HttpEntity entity = response.getEntity();
+					BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
+
+					String line = "";
+					String returnLine = "";
+					while((line = reader.readLine()) != null)
+					{
+						returnLine += line;
+					}
+					JSONObject jsonObject = new JSONObject(returnLine);
+					Long result = jsonObject.getLong("result");
+					final String mesg = jsonObject.getString("mesg");
+					String orderid = jsonObject.getString("orderid");
+					String productcode = jsonObject.getString("productcode");
+					String price = jsonObject.getString("price");
+					String dollar = jsonObject.getString("dollar");
+
+					final String contents = "orderid:" + orderid + "\nproductcode:" + productcode + "\nproduct:" + product + "\nprice:" + price + "\ndollar:" + dollar;
+
+					Log.d("LOG" ,"Getproducts_neworder_response:\n" + returnLine.toString());
+
+					if(result == 0)
+					{
+						new Thread()
+						{
+							public void run()
+							{
+								runOnUiThread(new Runnable()
+								{
+									@Override
+									public void run()
+									{
+										MyUtil.showMsg(Getproducts.this ,contents ,5);
+									}
+
+								});
+							}
+						}.start();
+					}
+					else
+					{
+						MyUtil.showMsg(Getproducts.this ,mesg ,5);
+
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
 	class MyBaseAdapter extends BaseAdapter
 	{
 
@@ -412,6 +523,7 @@ public class Getproducts extends Activity
 				holder.name = (TextView) convertView.findViewById(R.id.business_main_getproducts_name);
 				holder.type = (TextView) convertView.findViewById(R.id.business_main_getproducts_type);
 				holder.price = (TextView) convertView.findViewById(R.id.business_main_getproducts_price);
+
 				convertView.setTag(holder);
 			}
 			else
@@ -424,9 +536,23 @@ public class Getproducts extends Activity
 			holder.type.setText(productsList_list.get(position).getType());
 			holder.price.setText(productsList_list.get(position).getPrice());
 
+			Button button = (Button) convertView.findViewById(R.id.business_main_getproducts_button_buy);
+			button.setOnClickListener(new View.OnClickListener()
+			{
+
+				@SuppressLint("DefaultLocale")
+				@Override
+				public void onClick(View v )
+				{
+					String product = productsList_list.get(position).getId();
+					neworder(uid ,product);
+				}
+			});
+
 			convertView.setOnClickListener(new View.OnClickListener()
 			{
 
+				@SuppressLint("DefaultLocale")
 				@Override
 				public void onClick(View view )
 				{
@@ -452,10 +578,6 @@ public class Getproducts extends Activity
 						}
 					}.start();
 
-					// TODO Auto-generated method stub
-					// This can add buy system.
-					// ******************************************************************************************
-
 				}
 			});
 
@@ -467,4 +589,5 @@ public class Getproducts extends Activity
 			TextView id , show , type , name , price;
 		}
 	}
+
 }

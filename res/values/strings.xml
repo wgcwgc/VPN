@@ -21,6 +21,7 @@
     <string name="business_main_getproducts_name">服务器线路</string>
     <string name="business_main_getproducts_type">付费类型</string>
     <string name="business_main_getproducts_price">价格</string>
+    <string name="business_main_getproducts_button_buy">购买</string>
 
     <!-- business_menu setting -->
     <string name="business_menu_personInfromation">个人信息</string>

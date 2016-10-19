@@ -141,8 +141,8 @@ public class Business extends Activity
 	{
 
 		Intent intent = new Intent();
-		intent.putExtra("uid" ,"uid");
-		intent.putExtra("type" ,"type");
+		intent.putExtra("uid" ,uid);
+		intent.putExtra("type" ,type);
 		intent.setClass(Business.this ,Getproducts.class);
 		startActivity(intent);
 	}
