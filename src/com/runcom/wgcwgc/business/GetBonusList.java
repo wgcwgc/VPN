@@ -53,6 +53,7 @@ public class GetBonusList extends Activity
 
 	public List < BonusList > bonusList_list;
 	public BonusList bonuslist;
+	Button button;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -81,7 +82,7 @@ public class GetBonusList extends Activity
 
 	private void getBonusList(String uid , String type )
 	{
-		GetThread_getbonuslist getThread_getbonuslist = new GetThread_getbonuslist();
+		GetThread_getbonuslist getThread_getbonuslist = new GetThread_getbonuslist(uid , type);
 		getThread_getbonuslist.start();
 	}
 
@@ -187,7 +188,7 @@ public class GetBonusList extends Activity
 							String reason = jsonObject_content.getString("reason");
 							String type = jsonObject_content.getString("type");
 							String value = jsonObject_content.getString("value");
-							String bunusdate = jsonObject_content.getString("bunusdate");
+							String bonusdate = jsonObject_content.getString("bonusdate");
 							String hasgot = jsonObject_content.getString("hasgot");
 							String gotdate = jsonObject_content.getString("gotdate");
 
@@ -196,7 +197,7 @@ public class GetBonusList extends Activity
 							bonuslist.setReason(reason);
 							bonuslist.setType(type);
 							bonuslist.setValue(value);
-							bonuslist.setBonusdate(bunusdate);
+							bonuslist.setBonusdate(bonusdate);
 							bonuslist.setHasgot(hasgot);
 							bonuslist.setGotdate(gotdate);
 
@@ -218,7 +219,7 @@ public class GetBonusList extends Activity
 										// + bonusList_list.toString());
 										if(bonus_list.isEmpty())
 										{
-											MyUtil.showMsg(GetBonusList.this ,"您还未领取奖励" ,5);
+											MyUtil.showMsg(GetBonusList.this ,"您还没有可领取的奖励！" ,5);
 										}
 										else
 										{
@@ -240,6 +241,141 @@ public class GetBonusList extends Activity
 				e.printStackTrace();
 			}
 
+		}
+
+	}
+
+	void acceptbonus(String uid , String id )
+	{
+		GetBonusList_acceptBonus getBonusList_acceptBonus = new GetBonusList_acceptBonus(uid , id);
+		getBonusList_acceptBonus.start();
+
+	}
+
+	class GetBonusList_acceptBonus extends Thread
+	{
+		String uid;
+		String id;
+
+		public GetBonusList_acceptBonus()
+		{
+
+		}
+
+		public GetBonusList_acceptBonus(String uid , String id)
+		{
+			this.uid = uid;
+			this.id = id;
+		}
+
+		@SuppressLint("DefaultLocale")
+		@Override
+		public void run()
+		{
+			PackageManager packageManager = GetBonusList.this.getPackageManager();
+			PackageInfo packageInfo = null;
+			try
+			{
+				packageInfo = packageManager.getPackageInfo(GetBonusList.this.getPackageName() ,0);
+				int labelRes = packageInfo.applicationInfo.labelRes;
+				app = GetBonusList.this.getResources().getString(labelRes);
+			}
+			catch(NameNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+			String build = "57";
+			String dev = android.provider.Settings.Secure.getString(GetBonusList.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
+			String lang = Locale.getDefault().getLanguage();
+			if(lang.contains("zh"))
+			{
+				lang = "zh-Hans";
+			}
+			int market = 2;
+			String os = Build.VERSION.RELEASE;
+			int term = 0;
+			String ver = packageInfo.versionName;
+
+			HttpClient httpClient = SSLSocketFactoryEx.getNewHttpClient();// getNewHttpClient
+
+			dev = android.provider.Settings.Secure.getString(GetBonusList.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
+
+			String signValu = "tuoyouvpn" + app + build + dev + id + lang + market + os + term + uid + ver;
+			signValu = new MD5().md5(signValu).toUpperCase();
+			String url = "https://a.redvpn.cn:8443/interface/acceptbonus.php?app=" + app + "&id=" + id + "&build=" + build + "&uid=" + uid + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
+			// 第二步：创建代表请求的对象,参数是访问的服务器地址
+			Log.d("LOG" ,"GetBonusList_acceptbonus_url:\n" + url);
+			HttpGet httpGet = new HttpGet(url);
+
+			try
+			{
+				// 第三步：执行请求，获取服务器发还的相应对象
+				HttpResponse response = httpClient.execute(httpGet);
+				// 第四步：检查相应的状态是否正常：检查状态码的值是200表示正常
+				if(response.getStatusLine().getStatusCode() == 200)
+				{
+					// 第五步：从相应对象当中取出数据，放到entity当中
+					HttpEntity entity = response.getEntity();
+					BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
+
+					String line = "";
+					String returnLine = "";
+					while((line = reader.readLine()) != null)
+					{
+						returnLine += line;
+					}
+
+					Log.d("LOG" ,"GetBonuslist_acceptbonus_response:\n" + returnLine);
+					JSONObject jsonObject = new JSONObject(returnLine);
+					Long result = jsonObject.getLong("result");
+					final String mesg = jsonObject.getString("mesg");
+
+					if(result == 0)
+					{
+
+						new Thread()
+						{
+							public void run()
+							{
+								runOnUiThread(new Runnable()
+								{
+									@Override
+									public void run()
+									{
+										button.setText("已领取");
+										button.setEnabled(false);
+										MyUtil.showMsg(GetBonusList.this ,mesg ,5);
+									}
+
+								});
+							}
+						}.start();
+					}
+					else
+					{
+						new Thread()
+						{
+							public void run()
+							{
+								runOnUiThread(new Runnable()
+								{
+									@Override
+									public void run()
+									{
+										MyUtil.showMsg(GetBonusList.this ,mesg ,5);
+									}
+
+								});
+							}
+						}.start();
+					}
+
+				}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -278,7 +414,8 @@ public class GetBonusList extends Activity
 				holder = new Holder();
 				holder.id = (TextView) convertView.findViewById(R.id.business_main_getbonuslist_textView_id);
 				holder.title = (TextView) convertView.findViewById(R.id.business_main_getbonuslist_textView_title);
-				holder.reason = (TextView) convertView.findViewById(R.id.business_main_getbonuslist_textView_reason);
+				// holder.reason = (TextView)
+				// convertView.findViewById(R.id.business_main_getbonuslist_textView_reason);
 
 				convertView.setTag(holder);
 			}
@@ -289,9 +426,9 @@ public class GetBonusList extends Activity
 
 			holder.id.setText(bonusList_list.get(position).getId());
 			holder.title.setText(bonusList_list.get(position).getTitle());
-			holder.reason.setText(bonusList_list.get(position).getReason());
+			// holder.reason.setText(bonusList_list.get(position).getReason());
 
-			final Button button = (Button) convertView.findViewById(R.id.business_main_getbonuslist_button);
+			button = (Button) convertView.findViewById(R.id.business_main_getbonuslist_button);
 			if(bonusList_list.get(position).getHasgot().contains("1") || bonusList_list.get(position).getHasgot() == "1")
 			{
 				button.setText("已领取");
@@ -304,97 +441,12 @@ public class GetBonusList extends Activity
 
 			button.setOnClickListener(new View.OnClickListener()
 			{
-
 				@Override
 				public void onClick(View v )
 				{
-					PackageManager packageManager = GetBonusList.this.getPackageManager();
-					PackageInfo packageInfo = null;
-					try
-					{
-						packageInfo = packageManager.getPackageInfo(GetBonusList.this.getPackageName() ,0);
-						int labelRes = packageInfo.applicationInfo.labelRes;
-						app = GetBonusList.this.getResources().getString(labelRes);
-					}
-					catch(NameNotFoundException e)
-					{
-						e.printStackTrace();
-					}
-					String build = "57";
-					String dev = android.provider.Settings.Secure.getString(GetBonusList.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
-					String lang = Locale.getDefault().getLanguage();
-					if(lang.contains("zh"))
-					{
-						lang = "zh-Hans";
-					}
-					int market = 2;
-					String os = Build.VERSION.RELEASE;
-					int term = 0;
-					String ver = packageInfo.versionName;
-
-					HttpClient httpClient = SSLSocketFactoryEx.getNewHttpClient();// getNewHttpClient
-
-					dev = android.provider.Settings.Secure.getString(GetBonusList.this.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
-
-					String signValu = "tuoyouvpn" + app + build + dev + id + lang + market + os + term + uid + ver;
-					signValu = new MD5().md5(signValu).toUpperCase();
-					String url = "https://a.redvpn.cn:8443/interface/acceptbonus.php?app=" + app + "&id=" + id + "&build=" + build + "&uid=" + uid + "&dev=" + dev + "&lang=" + lang + "&market=" + market + "&os=" + os + "&term=" + term + "&ver=" + ver + "&sign=" + signValu;
-					// 第二步：创建代表请求的对象,参数是访问的服务器地址
-					Log.d("LOG" ,"GetBonusList_acceptbonus_url:\n" + url);
-					HttpGet httpGet = new HttpGet(url);
-
-					try
-					{
-						// 第三步：执行请求，获取服务器发还的相应对象
-						HttpResponse response = httpClient.execute(httpGet);
-						// System.out.println("test00");
-						// 第四步：检查相应的状态是否正常：检查状态码的值是200表示正常
-						if(response.getStatusLine().getStatusCode() == 200)
-						{
-							// 第五步：从相应对象当中取出数据，放到entity当中
-							// System.out.println("test01");
-							HttpEntity entity = response.getEntity();
-							BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
-							// String json_result = reader.readLine();
-							// JSONObject jsonObject = new
-							// JSONObject(json_result);
-
-							String line = "";
-							String returnLine = "";
-							while((line = reader.readLine()) != null)
-							{
-								returnLine += line;
-								// System.out.println("*" + line + "*\n");
-							}
-							Log.d("LOG" ,"GetBonuslist_acceptbonus_response:\n" + returnLine);
-							JSONObject jsonObject = new JSONObject(returnLine);
-							// String result = jsonObject.getString("result");
-							Long result = jsonObject.getLong("result");
-							String mesg = jsonObject.getString("mesg");
-							// JSONArray BonusListArray =
-							// jsonObject.getJSONArray("buyinfo");
-							// int leng = BonusListArray.length();
-
-							if(result == 0)
-							{
-								button.setText("已领取");
-								button.setEnabled(false);
-								MyUtil.showMsg(GetBonusList.this ,"领取成功" ,5);
-							}
-							else
-							{
-								MyUtil.showMsg(GetBonusList.this ,mesg ,5);
-							}
-
-						}
-					}
-					catch(Exception e)
-					{
-						Log.d("LOG" ,"GetBonusList_getBonusList_GetThread_submit_http_bug:\n" + e.toString());
-						e.printStackTrace();
-					}
-
+					acceptbonus(uid ,id);
 				}
+
 			});
 
 			convertView.setOnClickListener(new View.OnClickListener()

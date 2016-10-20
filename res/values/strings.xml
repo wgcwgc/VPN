@@ -33,7 +33,7 @@
     <string name="business_menu_cheakNewVersion">检查新版本</string>
     <string name="business_menu_about">关于我们</string>
     <string name="business_menu_settings">设置</string>
-    <string name="business_menu_exit">退出</string>
+    <string name="business_menu_exit">注销</string>
 
     <!-- main setting -->
     <string name="main_Button01">账号</string>
